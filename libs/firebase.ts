@@ -121,7 +121,28 @@ export class Firebase {
   import(url: string) {
     return this.functions().httpsCallable(url);
   }
-
+  addComment(comment: string) {
+    const user = this.user();
+    const userData = this.userData();
+    const commentRef = this.collection("comments").doc();
+    const commentId = commentRef.id;
+    const commentData = {
+      comment,
+      userId: user?.uid,
+      userName: user?.displayName,
+      userPhotoUrl: user?.photoURL,
+      createdAt: new Date(),
+    };
+    return commentRef.set(commentData).then(async () => {
+      await userData.update({
+        comments: firebase.firestore.FieldValue.arrayUnion(commentId),
+      });
+    });
+  }
+  getComments(documentPath: string) {
+    const commentsRef = this.collection("comments");
+    return commentsRef.where("documentPath", "==", documentPath).get();
+  }
   stateChanged(callback: (user: firebase.User | null) => void) {
     const auth = this.auth();
     auth.onAuthStateChanged(callback);

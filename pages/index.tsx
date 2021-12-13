@@ -1,52 +1,206 @@
-import router from "next/router";
+import React, { useEffect, useMemo, useState } from "react";
+import { EventType, Operation, SocketEvent } from "../libs/event";
+import { discordId, Presence } from "../libs/types";
+
 import type { NextPage } from "next";
-import React from "react";
 import FadeIn from "react-fade-in";
 
 const Home: NextPage = () => {
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [doing, setDoing] = useState<Presence>();
+  const [error, setError] = useState<string>();
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [isDisconnected, setIsDisconnected] = useState<boolean>(false);
+  const [id, setId] = useState(discordId);
+  const send = (op: Operation, d?: unknown): void => {
+    if (socket !== null) {
+      socket.send(
+        JSON.stringify({
+          op,
+          d,
+        })
+      );
+    }
+  };
+  useEffect(() => {
+    if (socket === null) return () => {};
+    if (id == null) {
+      setError("Invalid ID");
+    }
+    if (id !== discordId) {
+      setError("Invalid ID");
+    }
+    if (id !== "") {
+      setError("");
+    }
+
+    switch (socket.readyState) {
+      case WebSocket.OPEN:
+        setIsConnected(true);
+        setIsConnecting(false);
+        setIsDisconnected(false);
+        break;
+      case WebSocket.CONNECTING:
+        setIsConnected(false);
+        setIsConnecting(true);
+        setIsDisconnected(false);
+        break;
+      case WebSocket.CLOSED:
+        setIsConnected(false);
+        setIsConnecting(false);
+        setIsDisconnected(true);
+        break;
+      case WebSocket.CLOSING:
+        setIsConnected(false);
+        setIsConnecting(false);
+        setIsDisconnected(false);
+        break;
+    }
+
+    socket.onmessage = function ({ data }: MessageEvent): void {
+      const { op, t, d }: SocketEvent = JSON.parse(data);
+
+      if (op === Operation.Hello) {
+        setInterval(
+          () => send(Operation.Heartbeat),
+          (d as { heartbeat_interval: number }).heartbeat_interval
+        );
+        send(Operation.Initialize, {
+          subscribe_to_id: id,
+        });
+      } else if (op === Operation.Event && t) {
+        if ([EventType.INIT_STATE, EventType.PRESENCE_UPDATE].includes(t))
+          setDoing(d as Presence);
+      }
+    };
+
+    socket.onclose = () => {
+      setSocket(null);
+    };
+  }, [socket]);
+  useEffect(() => {
+    if (!socket) setSocket(new WebSocket("wss://api.lanyard.rest/socket"));
+  }, [socket]);
+
+  const currentActivity = useMemo(
+    () => doing?.activities.filter((activity) => activity.type === 0)[0],
+    [doing]
+  );
+
+  useEffect(() => {}, [currentActivity]);
+  // error toast tailwindcss
+  if (!doing || !doing?.discord_status) return null;
   return (
     <>
       <FadeIn>
         <div className="flex flex-col items-center justify-center h-screen">
           <div className="rounded-lg px-8 pt-6 pb-8 mb-4 space-y-2">
-            <div className="flex flex-col items-center justify-center">
-              <h1 className="text-center text-2xl font-bold text-gray-800">
-                Welcome
-              </h1>
-              <p className="text-center text-gray-600">
-                is a simple, yet powerful, template for create your next web
-                project and mobile project (PWA).
-              </p>
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <button
-                className="max-w-xs py-2 px-4 flex justify-center items-center bg-blue-500 hover:bg-blue-700 focus:ring-blue-700 focus:ring-offset-blue-100 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-                onClick={() => router.push("/login")}
-              >
-                Try out
-              </button>
-            </div>
+            {isConnecting && (
+              <div className="flex justify-center">
+                <div className="w-full max-w-xs">
+                  <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <div className="flex justify-center">
+                      <div className="w-full max-w-xs">
+                        <div className="text-center">
+                          <div className="text-gray-700 text-xl font-bold mb-2">
+                            Connecting...
+                          </div>
+                          <div className="text-gray-700 text-sm">
+                            Please wait while we connect to Discord.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {isDisconnected && (
+              <div className="flex justify-center">
+                <div className="w-full max-w-xs">
+                  <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <div className="flex justify-center">
+                      <div className="w-full max-w-xs">
+                        <div className="text-center">
+                          <div className="text-gray-700 text-xl font-bold mb-2">
+                            Disconnected
+                          </div>
+                          <div className="text-gray-700 text-sm">
+                            Please refresh the page to reconnect.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
-            <div className="flex justify-center">
-              <a
-                href="https://vercel.com"
-                target="_blank"
-                rel="noreferrer"
-                className="ml-1"
+            {isConnected && (
+              <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative">
+                <span className="absolute pin-y pin-l flex items-center">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm-5.6-4.29a9.95 9.95 0 0 1 11.2 0 8 8 0 1 0-11.2 0zm6.12-7.64l3.02-3.02 1.41 1.41-3.02 3.02a2 2 0 1 1-1.41-1.41z" />
+                  </svg>
+                </span>
+                <span className="text-xs">Connection...</span>
+              </div>
+            )}
+            {error && (
+              <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative">
+                <span className="absolute pin-y pin-l flex items-center">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm-5.6-4.29a9.95 9.95 0 0 1 11.2 0 8 8 0 1 0-11.2 0zm6.12-7.64l3.02-3.02 1.41 1.41-3.02 3.02a2 2 0 1 1-1.41-1.41z" />
+                  </svg>
+                </span>
+                <span className="text-xs">{error}</span>
+              </div>
+            )}
+            <form className="flex flex-col space-y-2" method="POST">
+              <input
+                className="appearance-none bg-transparent border-b-2 border-gray-200 text-gray-700 mb-3 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                type="text"
+                placeholder="Enter your discord id"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                required
+              />
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  send(Operation.Hello);
+                }}
               >
-                <svg
-                  className="w-14 h-14"
-                  viewBox="0 0 283 64"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M141.04 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.46 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM248.72 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.45 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM200.24 34c0 6 3.92 10 10 10 4.12 0 7.21-1.87 8.8-4.92l7.68 4.43c-3.18 5.3-9.14 8.49-16.48 8.49-11.05 0-19-7.2-19-18s7.96-18 19-18c7.34 0 13.29 3.19 16.48 8.49l-7.68 4.43c-1.59-3.05-4.68-4.92-8.8-4.92-6.07 0-10 4-10 10zm82.48-29v46h-9V5h9zM36.95 0L73.9 64H0L36.95 0zm92.38 5l-27.71 48L73.91 5H84.3l17.32 30 17.32-30h10.39zm58.91 12v9.69c-1-.29-2.06-.49-3.2-.49-5.81 0-10 4-10 10V51h-9V17h9v9.2c0-5.08 5.91-9.2 13.2-9.2z"
-                    fill="#000"
-                  />
-                </svg>
-              </a>
-            </div>
+                Connect
+              </button>
+            </form>
+            <>
+              <div className="flex items-center">
+                <img
+                  className="h-12 w-12 rounded-full"
+                  src={`https://cdn.discordapp.com/avatars/${id}/${doing?.discord_user.avatar}?size=80`}
+                />
+                <div className="ml-4">
+                  <div className="text-lg font-semibold">
+                    {doing?.discord_user.username}
+                  </div>
+                  <div className="text-gray-600">
+                    #{doing?.discord_user.discriminator}
+                  </div>
+                </div>
+              </div>
+            </>
           </div>
         </div>
       </FadeIn>
