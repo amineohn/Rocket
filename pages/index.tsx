@@ -69,6 +69,9 @@ const Home: NextPage = () => {
         send(Operation.Initialize, {
           subscribe_to_id: id,
         });
+        setIsConnected(true);
+        setIsConnecting(false);
+        setIsDisconnected(false);
       } else if (op === Operation.Event && t) {
         if ([EventType.INIT_STATE, EventType.PRESENCE_UPDATE].includes(t))
           setDoing(d as Presence);
@@ -84,10 +87,13 @@ const Home: NextPage = () => {
   }, [socket]);
 
   const currentActivity = useMemo(
-    () => doing?.activities.filter((activity) => activity.type === 0)[0],
+    () => doing?.activities?.filter((activity) => activity.type === 0)[0],
     [doing]
   );
-
+  const name = currentActivity?.name?.replace("Code", "Visual Studio Code");
+  const replaced =
+    currentActivity?.state?.replace("📁 ", "")?.split(" | ")?.[0] ||
+    "a file".replace(`${[0]}.tsx`, `${[0]}`);
   useEffect(() => {}, [currentActivity]);
   if (!doing || !doing?.discord_status) return null;
   return (
@@ -138,29 +144,14 @@ const Home: NextPage = () => {
 
             {isConnected && (
               <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative">
-                <span className="absolute pin-y pin-l flex items-center">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm-5.6-4.29a9.95 9.95 0 0 1 11.2 0 8 8 0 1 0-11.2 0zm6.12-7.64l3.02-3.02 1.41 1.41-3.02 3.02a2 2 0 1 1-1.41-1.41z" />
-                  </svg>
+                <span className="text-xs">
+                  Connected as {doing?.discord_user.username}#
+                  {doing?.discord_user?.discriminator}
                 </span>
-                <span className="text-xs">Connection...</span>
               </div>
             )}
             {error && (
               <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative">
-                <span className="absolute pin-y pin-l flex items-center">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm-5.6-4.29a9.95 9.95 0 0 1 11.2 0 8 8 0 1 0-11.2 0zm6.12-7.64l3.02-3.02 1.41 1.41-3.02 3.02a2 2 0 1 1-1.41-1.41z" />
-                  </svg>
-                </span>
                 <span className="text-xs">{error}</span>
               </div>
             )}
@@ -184,22 +175,136 @@ const Home: NextPage = () => {
                 Connect
               </button>
             </form>
-            <>
-              <div className="flex items-center">
-                <img
-                  className="h-12 w-12 rounded-full"
-                  src={`https://cdn.discordapp.com/avatars/${id}/${doing?.discord_user.avatar}?size=80`}
-                />
-                <div className="ml-4">
-                  <div className="text-lg font-semibold">
-                    {doing?.discord_user.username}
-                  </div>
-                  <div className="text-gray-600">
-                    #{doing?.discord_user.discriminator}
+            {currentActivity ? (
+              <>
+                <div className="flex items-center">
+                  <img
+                    className="h-12 w-12 rounded-full"
+                    src={`https://cdn.discordapp.com/avatars/${id}/${doing?.discord_user?.avatar}?size=80`}
+                  />
+                  <div className="ml-4">
+                    <div className="text-lg font-semibold">
+                      {doing?.discord_user?.username}
+                    </div>
+                    <div className="text-gray-600">
+                      #{doing?.discord_user?.discriminator}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </>
+
+                <FadeIn className="space-y-2">
+                  <div className="flex items-center space-x-4 text-gray-700 rounded-md dark:text-gray-300">
+                    {currentActivity?.name == "Fortnite" &&
+                    currentActivity?.assets ? (
+                      <>
+                        <img
+                          src={`https://cdn.discordapp.com/app-assets/${currentActivity?.application_id}/858011444276494356.png`}
+                          className="flex-shrink-0 w-16 h-16 rounded-2xl"
+                        />
+                      </>
+                    ) : (
+                      <img
+                        src={`https://cdn.discordapp.com/app-assets/${currentActivity?.application_id}/${currentActivity?.assets?.large_image}.png`}
+                        className="flex-shrink-0 w-16 h-16 rounded-2xl"
+                      />
+                    )}
+                    <div className="text-sm leading-tight truncate">
+                      {currentActivity ? (
+                        <>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="font-black text-black dark:text-white">
+                                {name}
+                              </span>
+                            </div>
+                            {currentActivity?.state ? (
+                              <span className="text-black dark:text-white">
+                                {replaced}
+                              </span>
+                            ) : null}
+                          </div>
+                        </>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4 text-gray-700 rounded-md dark:text-gray-300">
+                    {doing?.spotify ? (
+                      <>
+                        <img
+                          src={
+                            doing?.spotify?.album_art_url
+                              ? doing?.spotify?.album_art_url
+                              : "https://i.imgur.com/XqQXZQH.png"
+                          }
+                          className="flex-shrink-0 w-16 h-16 rounded-2xl"
+                        />
+
+                        <div className="text-sm leading-tight truncate">
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="font-black text-black dark:text-white">
+                                {doing?.spotify?.artist
+                                  ? doing?.spotify?.artist
+                                      .replace(/\;/g, ",")
+                                      .replace(/\&/g, "and")
+                                  : "Unknown Artist"}
+                              </span>
+                            </div>
+                            <a
+                              className="text-gray-800 dark:text-gray-200 font-medium"
+                              href={`https://open.spotify.com/track/${doing?.spotify.track_id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {doing?.listening_to_spotify ? (
+                                <>
+                                  {doing?.spotify?.song
+                                    ? doing?.spotify?.song?.replace(
+                                        /\&/g,
+                                        "and"
+                                      )
+                                    : "Unknown Song"}
+                                </>
+                              ) : (
+                                "Unknown Song"
+                              )}
+                            </a>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+                </FadeIn>
+              </>
+            ) : (
+              <>
+                <FadeIn>
+                  <div className="flex -space-y-0.5 space-x-1">
+                    <svg
+                      className="animate-spin h-5 w-5 text-gray-900 dark:text-gray-100"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    <span className="font-medium">Loading..</span>
+                  </div>
+                </FadeIn>
+              </>
+            )}
           </div>
         </div>
       </FadeIn>
