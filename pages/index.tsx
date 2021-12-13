@@ -89,7 +89,6 @@ const Home: NextPage = () => {
   );
 
   useEffect(() => {}, [currentActivity]);
-  // error toast tailwindcss
   if (!doing || !doing?.discord_status) return null;
   return (
     <>
