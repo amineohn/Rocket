@@ -176,13 +176,13 @@ const SignUp = () => {
 
             <div className="mb-4">
               <label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-neutral-700 text-sm font-bold mb-2"
                 htmlFor="name"
               >
                 Name
               </label>
               <input
-                className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="name"
                 type="text"
                 name="name"
@@ -193,13 +193,13 @@ const SignUp = () => {
             </div>
             <div className="mb-6">
               <label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-neutral-700 text-sm font-bold mb-2"
                 htmlFor="email"
               >
                 Email
               </label>
               <input
-                className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="email"
                 type="email"
                 name="email"
@@ -210,13 +210,13 @@ const SignUp = () => {
             </div>
             <div className="mb-6">
               <label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-neutral-700 text-sm font-bold mb-2"
                 htmlFor="password"
               >
                 Password
               </label>
               <input
-                className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-neutral-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="password"
                 type="password"
                 name="password"
@@ -225,7 +225,7 @@ const SignUp = () => {
                 onChange={(e) => onChange(e)}
               />
               {password.length < 6 && (
-                <p className="text-gray-600 text-xs italic">
+                <p className="text-neutral-600 text-xs italic">
                   Password must contain at least 6 characters
                 </p>
               )}

@@ -60,21 +60,27 @@ const Home: NextPage = () => {
 
     socket.onmessage = function ({ data }: MessageEvent): void {
       const { op, t, d }: SocketEvent = JSON.parse(data);
-
-      if (op === Operation.Hello) {
-        setInterval(
-          () => send(Operation.Heartbeat),
-          (d as { heartbeat_interval: number }).heartbeat_interval
-        );
-        send(Operation.Initialize, {
-          subscribe_to_id: id,
-        });
-        setIsConnected(true);
-        setIsConnecting(false);
-        setIsDisconnected(false);
-      } else if (op === Operation.Event && t) {
-        if ([EventType.INIT_STATE, EventType.PRESENCE_UPDATE].includes(t))
-          setDoing(d as Presence);
+      switch (op) {
+        case Operation.Hello:
+          setInterval(
+            () => send(Operation.Heartbeat),
+            (d as { heartbeat_interval: number }).heartbeat_interval
+          );
+          send(Operation.Initialize, {
+            subscribe_to_id: id,
+          });
+          setIsConnected(true);
+          setIsConnecting(false);
+          setIsDisconnected(false);
+          break;
+        case Operation.Event:
+          if (t) {
+            if ([EventType.INIT_STATE, EventType.PRESENCE_UPDATE].includes(t))
+              setDoing(d as Presence);
+          }
+          break;
+        default:
+          break;
       }
     };
 
@@ -108,10 +114,10 @@ const Home: NextPage = () => {
                     <div className="flex justify-center">
                       <div className="w-full max-w-xs">
                         <div className="text-center">
-                          <div className="text-gray-700 text-xl font-bold mb-2">
+                          <div className="text-neutral-700 text-xl font-bold mb-2">
                             Connecting...
                           </div>
-                          <div className="text-gray-700 text-sm">
+                          <div className="text-neutral-700 text-sm">
                             Please wait while we connect to Discord.
                           </div>
                         </div>
@@ -128,10 +134,10 @@ const Home: NextPage = () => {
                     <div className="flex justify-center">
                       <div className="w-full max-w-xs">
                         <div className="text-center">
-                          <div className="text-gray-700 text-xl font-bold mb-2">
+                          <div className="text-neutral-700 text-xl font-bold mb-2">
                             Disconnected
                           </div>
-                          <div className="text-gray-700 text-sm">
+                          <div className="text-neutral-700 text-sm">
                             Please refresh the page to reconnect.
                           </div>
                         </div>
@@ -157,7 +163,7 @@ const Home: NextPage = () => {
             )}
             <form className="flex flex-col space-y-2" method="POST">
               <input
-                className="appearance-none bg-transparent border-b-2 border-gray-200 text-gray-700 mb-3 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="appearance-none bg-transparent border-b-2 border-neutral-200 text-neutral-700 mb-3 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-neutral-500"
                 type="text"
                 placeholder="Enter your discord id"
                 value={id}
@@ -183,17 +189,17 @@ const Home: NextPage = () => {
                     src={`https://cdn.discordapp.com/avatars/${id}/${doing?.discord_user?.avatar}?size=80`}
                   />
                   <div className="ml-4">
-                    <div className="text-lg font-semibold">
+                    <div className="text-lg text-neutral-900 font-semibold">
                       {doing?.discord_user?.username}
                     </div>
-                    <div className="text-gray-600">
+                    <div className="text-neutral-600">
                       #{doing?.discord_user?.discriminator}
                     </div>
                   </div>
                 </div>
 
                 <FadeIn className="space-y-2">
-                  <div className="flex items-center space-x-4 text-gray-700 rounded-md dark:text-gray-300">
+                  <div className="flex items-center space-x-4 text-neutral-700 rounded-md dark:text-neutral-300">
                     {currentActivity?.name == "Fortnite" &&
                     currentActivity?.assets ? (
                       <>
@@ -227,7 +233,7 @@ const Home: NextPage = () => {
                       ) : null}
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4 text-gray-700 rounded-md dark:text-gray-300">
+                  <div className="flex items-center space-x-4 text-neutral-700 rounded-md dark:text-neutral-300">
                     {doing?.spotify ? (
                       <>
                         <img
@@ -251,7 +257,7 @@ const Home: NextPage = () => {
                               </span>
                             </div>
                             <a
-                              className="text-gray-800 dark:text-gray-200 font-medium"
+                              className="text-neutral-800 dark:text-neutral-200 font-medium"
                               href={`https://open.spotify.com/track/${doing?.spotify.track_id}`}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -281,7 +287,7 @@ const Home: NextPage = () => {
                 <FadeIn>
                   <div className="flex -space-y-0.5 space-x-1">
                     <svg
-                      className="animate-spin h-5 w-5 text-gray-900 dark:text-gray-100"
+                      className="animate-spin h-5 w-5 text-neutral-900 dark:text-neutral-100"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"

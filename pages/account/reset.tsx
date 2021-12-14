@@ -125,23 +125,23 @@ const Reset: NextPage = () => {
 
           <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
             <div className="mb-4">
-              <h1 className="text-center text-2xl text-gray-800 font-bold">
+              <h1 className="text-center text-2xl text-neutral-800 font-bold">
                 Password change
               </h1>
-              <p className="text-center text-gray-700 text-xs">
+              <p className="text-center text-neutral-700 text-xs">
                 Enter your new password
               </p>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-neutral-700 text-sm font-bold mb-2"
                   htmlFor="password"
                 >
                   Current Password
                 </label>
                 <input
-                  className="shadow appearance-none border bg-white rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border bg-white rounded-lg w-full py-2 px-3 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="password"
                   type="password"
                   placeholder="Enter your current password"
@@ -151,13 +151,13 @@ const Reset: NextPage = () => {
               </div>
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-neutral-700 text-sm font-bold mb-2"
                   htmlFor="new"
                 >
                   New Password
                 </label>
                 <input
-                  className="shadow appearance-none border bg-white rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border bg-white rounded-lg w-full py-2 px-3 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="new"
                   type="new"
                   placeholder="New password"

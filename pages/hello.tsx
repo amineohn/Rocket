@@ -21,7 +21,7 @@ const Hello = () => {
         setData(data);
       });
 
-      fire.collection("clients").add({
+      fire.collection("comments").add({
         comment,
         userId: fire.id(),
         userName: fire.userName(),
@@ -31,9 +31,6 @@ const Hello = () => {
       setComment("");
       if (comment != "") {
         setSuccess("Comment added successfully");
-      }
-      if (comment == "") {
-        setError("Comment cannot be empty");
       }
     } catch (error: Errors | any) {
       const check = new Validate();
@@ -58,7 +55,7 @@ const Hello = () => {
     <div className="flex items-center justify-center mx-5">
       <div className="my-60 lg:my-60 h-screen space-y-2">
         {error && (
-          <div className="shadow-lg rounded-2xl p-4 bg-white dark:bg-gray-800 w-64 m-auto">
+          <div className="shadow-lg rounded-2xl p-4 bg-white dark:bg-neutral-800 w-64 m-auto">
             <div className="w-full h-full text-center">
               <div className="flex h-full flex-col justify-between">
                 <svg
@@ -74,11 +71,7 @@ const Hello = () => {
                     d="M5 13l4 4L19 7"
                   ></path>
                 </svg>
-                <p className="text-gray-600 dark:text-gray-100 text-md py-2 px-6">
-                  User
-                  <span className="text-gray-800 dark:text-white font-bold">
-                    23722873
-                  </span>
+                <p className="text-neutral-600 dark:text-neutral-100 text-md py-2 px-6">
                   {error}
                 </p>
                 <div className="flex items-center justify-between gap-4 w-full mt-8">
@@ -94,8 +87,30 @@ const Hello = () => {
             </div>
           </div>
         )}
+        <form>
+          <div className="flex items-center space-x-6">
+            <div className="shrink-0">
+              <img
+                className="h-16 w-16 object-cover rounded-full"
+                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
+                alt="Current profile photo"
+              />
+            </div>
+            <label className="block">
+              <span className="sr-only">Choose profile photo</span>
+              <input
+                type="file"
+                className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+              />
+            </label>
+          </div>
+          <label className="mt-6 flex items-center justify-center space-x-2 text-sm font-medium text-neutral-600">
+            <input type="checkbox" className="accent-violet-500" checked />
+            <span>Yes, send me all your stupid updates</span>
+          </label>
+        </form>
         {success && (
-          <div className="shadow-lg rounded-2xl p-4 bg-white dark:bg-gray-800 w-64 m-auto">
+          <div className="shadow-lg rounded-2xl p-4 bg-white dark:bg-neutral-800 w-64 m-auto">
             <div className="w-full h-full text-center">
               <div className="flex h-full flex-col justify-between">
                 <svg
@@ -111,8 +126,8 @@ const Hello = () => {
                     d="M5 13l4 4L19 7"
                   ></path>
                 </svg>
-                <p className="text-gray-600 dark:text-gray-100 text-md py-2 px-6">
-                  <span className="text-gray-800 dark:text-white font-bold">
+                <p className="text-neutral-600 dark:text-neutral-100 text-md py-2 px-6">
+                  <span className="text-neutral-800 dark:text-white font-bold">
                     {comment}
                   </span>
                   {success}
@@ -131,11 +146,11 @@ const Hello = () => {
           </div>
         )}
         <div className="container mx-auto px-4 space-y-2 max-w-xs">
-          <h1 className="text-2xl font-bold text-gray-800">Hello</h1>
+          <h1 className="text-2xl font-bold text-neutral-800">Hello</h1>
           <form method="POST" onSubmit={handleSubmit}>
-            <label className="text-gray-700" htmlFor="name">
+            <label className="text-neutral-700" htmlFor="name">
               <textarea
-                className="flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                className="flex-1 appearance-none border border-neutral-300 w-full py-2 px-4 bg-white text-neutral-700 placeholder-neutral-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 id="comment"
                 placeholder="Enter your comment"
                 name="comment"
@@ -167,8 +182,8 @@ const Hello = () => {
         <div className="container mx-auto space-y-2 flex justify-center">
           <div className="inline gap-2 grid grid-cols-1 lg:grid-cols-4">
             {data.map((data: Post) => (
-              <div className="bg-white dark:bg-gray-800 w-72 shadow-lg rounded-xl p-4">
-                <p className="text-gray-600 dark:text-white">
+              <div className="bg-white dark:bg-neutral-800 w-72 shadow-lg rounded-xl p-4">
+                <p className="text-neutral-600 dark:text-white">
                   <span className="font-bold text-indigo-500 text-lg">“</span>
                   {data.comment}
                   <span className="font-bold text-indigo-500 text-lg">”</span>
@@ -185,7 +200,7 @@ const Hello = () => {
                     <span className="font-semibold text-indigo-500 text-sm">
                       {data.userName}
                     </span>
-                    <span className="dark:text-gray-400 text-xs flex items-center">
+                    <span className="dark:text-neutral-400 text-xs flex items-center">
                       Developper
                       <img src="/icons/rocket.svg" className="ml-2 h-4 w-4" />
                     </span>

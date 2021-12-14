@@ -84,7 +84,7 @@ const Login: NextPage = () => {
           <div className="flex items-center justify-center z-50">
             <div className="flex justify-center m-auto space-x-2">
               <svg
-                className="flex justify-center animate-spin h-7 w-7 text-gray-800 mt-1"
+                className="flex justify-center animate-spin h-7 w-7 text-neutral-800 mt-1"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -179,14 +179,14 @@ const Login: NextPage = () => {
               </Transition>
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-neutral-700 text-sm font-bold mb-2"
                   htmlFor="email"
                 >
                   Email
                 </label>
                 <input
                   onChange={setEmailChange}
-                  className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="email"
                   type="email"
                   placeholder="Email"
@@ -194,14 +194,14 @@ const Login: NextPage = () => {
               </div>
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-neutral-700 text-sm font-bold mb-2"
                   htmlFor="password"
                 >
                   Password
                 </label>
                 <input
                   onChange={setPasswordChange}
-                  className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border rounded-lg w-full py-2 px-3 bg-white text-neutral-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                   id="password"
                   type="password"
                   placeholder="******************"

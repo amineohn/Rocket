@@ -125,20 +125,20 @@ const Password: NextPage = () => {
               <h1 className="text-center text-2xl font-bold">
                 Forgot your password
               </h1>
-              <p className="text-center text-gray-700 text-xs">
+              <p className="text-center text-neutral-700 text-xs">
                 Enter your email address to reset your password
               </p>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-neutral-700 text-sm font-bold mb-2"
                   htmlFor="email"
                 >
                   Email
                 </label>
                 <input
-                  className="shadow bg-white appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow bg-white appearance-none border rounded-lg w-full py-2 px-3 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="email"
                   type="email"
                   placeholder="Email"

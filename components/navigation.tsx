@@ -21,7 +21,7 @@ const Navigation = () => {
           <div className="fixed inset-0">
             <div className="absolute inset-0" />
           </div>
-          <div className="relative bg-blue-500 text-gray-300 p-4 rounded-lg shadow-lg flex flex-col w-64">
+          <div className="relative bg-blue-500 text-neutral-300 p-4 rounded-lg shadow-lg flex flex-col w-64">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <img
@@ -77,7 +77,7 @@ const Navigation = () => {
                       className="cursor-pointer group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-white !bg-blue-900 !bg-opacity-20 focus:outline-none focus:!bg-blue-700 transition ease-in-out duration-150"
                     >
                       <svg
-                        className="mr-4 h-5 w-5 text-gray-300 group-hover:text-gray-300 group-focus:text-gray-300 transition ease-in-out duration-150"
+                        className="mr-4 h-5 w-5 text-neutral-300 group-hover:text-neutral-300 group-focus:text-neutral-300 transition ease-in-out duration-150"
                         role="img"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 512"
@@ -99,7 +99,7 @@ const Navigation = () => {
                       className="cursor-pointer group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-white !bg-blue-900 !bg-opacity-20 focus:outline-none focus:!bg-blue-700 transition ease-in-out duration-150"
                     >
                       <svg
-                        className="mr-4 h-5 w-5 text-gray-300 group-hover:text-gray-300 group-focus:text-gray-300 transition ease-in-out duration-150"
+                        className="mr-4 h-5 w-5 text-neutral-300 group-hover:text-neutral-300 group-focus:text-neutral-300 transition ease-in-out duration-150"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 448 512"
                       >
@@ -122,7 +122,7 @@ const Navigation = () => {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 512 512"
-                      className="mr-4 h-5 w-5 text-gray-300 group-hover:text-gray-300 group-focus:text-gray-300 transition ease-in-out duration-150"
+                      className="mr-4 h-5 w-5 text-neutral-300 group-hover:text-neutral-300 group-focus:text-neutral-300 transition ease-in-out duration-150"
                     >
                       <path
                         fill="currentColor"
