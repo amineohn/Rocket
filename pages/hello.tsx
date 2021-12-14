@@ -11,21 +11,17 @@ const Hello = () => {
   const fire = new Firebase();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (comment === "") {
-      setError("Comment cannot be empty");
-    }
-
-    if (comment != "") {
-      setSuccess("Comment added successfully");
-    }
-    if (comment.length > 300) {
-      setError("Comment cannot be more than 300 characters");
-    }
-    if (comment.length === 0) {
-      setError("Comment cannot be empty");
-    }
     try {
-      fire.addComment(comment);
+      if (comment.length > 300) {
+        setError("Comment cannot be more than 300 characters");
+      }
+      if (comment.length === 0) {
+        setError("Comment cannot be empty");
+      }
+      if (comment.length > 0 && comment.length <= 300) {
+        fire.addComment(comment);
+        setSuccess("Comment added successfully");
+      }
     } catch (error: Errors | any) {
       const check = new Validate();
       const messages = check.errors(error.code, error.message);
@@ -33,13 +29,16 @@ const Hello = () => {
     }
   };
   useEffect(() => {
-    fire.collection("comments").onSnapshot((snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setData(data);
-    });
+    fire
+      .collection("comments")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setData(data);
+      });
   }, []);
 
   return (
