@@ -133,11 +133,8 @@ export class Firebase {
       userPhotoUrl: user?.photoURL,
       createdAt: new Date(),
     };
-    return commentRef.set(commentData).then(async () => {
-      await userData.update({
-        comments: firebase.firestore.FieldValue.arrayUnion(commentId),
-      });
-    });
+    commentRef.set(commentData);
+    userData.collection("comments").doc(commentId).set(commentData);
   }
   getComments(documentPath: string) {
     const commentsRef = this.collection("comments");

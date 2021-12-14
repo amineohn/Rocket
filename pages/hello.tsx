@@ -10,35 +10,20 @@ const Hello = () => {
   const [data, setData] = useState([{}] as any);
   const fire = new Firebase();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault();
-      fire.addComment(comment);
-      fire.collection("comments").onSnapshot((snapshot) => {
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setData(data);
-      });
+    e.preventDefault();
+    if (comment === "") {
+      setError("Comment cannot be empty");
+    }
 
-      fire.collection("comments").add({
-        comment,
-        userId: fire.id(),
-        userName: fire.userName(),
-        userPhotoUrl: fire.photoUrl(),
-        createdAt: new Date(),
-      });
-      setComment("");
-      if (comment != "") {
-        setSuccess("Comment added successfully");
-      }
+    if (comment != "") {
+      setSuccess("Comment added successfully");
+    }
+    try {
+      fire.addComment(comment);
     } catch (error: Errors | any) {
       const check = new Validate();
       const messages = check.errors(error.code, error.message);
       setError(messages);
-    }
-    if (comment === "") {
-      setError("Comment cannot be empty");
     }
   };
   useEffect(() => {
@@ -87,28 +72,6 @@ const Hello = () => {
             </div>
           </div>
         )}
-        <form>
-          <div className="flex items-center space-x-6">
-            <div className="shrink-0">
-              <img
-                className="h-16 w-16 object-cover rounded-full"
-                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
-                alt="Current profile photo"
-              />
-            </div>
-            <label className="block">
-              <span className="sr-only">Choose profile photo</span>
-              <input
-                type="file"
-                className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-              />
-            </label>
-          </div>
-          <label className="mt-6 flex items-center justify-center space-x-2 text-sm font-medium text-neutral-600">
-            <input type="checkbox" className="accent-violet-500" checked />
-            <span>Yes, send me all your stupid updates</span>
-          </label>
-        </form>
         {success && (
           <div className="shadow-lg rounded-2xl p-4 bg-white dark:bg-neutral-800 w-64 m-auto">
             <div className="w-full h-full text-center">
@@ -177,6 +140,24 @@ const Hello = () => {
               </svg>
               loading
             </button>
+          </form>
+          <form className="pt-2">
+            <div className="flex items-center space-x-6">
+              <div className="shrink-0">
+                <img
+                  className="h-16 w-16 object-cover rounded-full"
+                  src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
+                  alt="Current profile photo"
+                />
+              </div>
+              <label className="block">
+                <span className="sr-only">Choose profile photo</span>
+                <input
+                  type="file"
+                  className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                />
+              </label>
+            </div>
           </form>
         </div>
         <div className="container mx-auto space-y-2 flex justify-center">
