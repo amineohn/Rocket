@@ -108,7 +108,7 @@ const Home: NextPage = () => {
         <div className="flex flex-col items-center justify-center h-screen">
           <div className="rounded-lg px-8 pt-6 pb-8 mb-4 space-y-2">
             {isConnecting && (
-              <div className="flex justify-center">
+              <div className="flex justify-center animate-heartbeat">
                 <div className="w-full max-w-xs">
                   <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="flex justify-center">
@@ -128,7 +128,7 @@ const Home: NextPage = () => {
               </div>
             )}
             {isDisconnected && (
-              <div className="flex justify-center">
+              <div className="flex justify-center animate-heartbeat">
                 <div className="w-full max-w-xs">
                   <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="flex justify-center">
@@ -149,7 +149,7 @@ const Home: NextPage = () => {
             )}
 
             {isConnected && (
-              <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative">
+              <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative animate-BounceIn">
                 <span className="text-xs">
                   Connected as {doing?.discord_user.username}#
                   {doing?.discord_user?.discriminator}
@@ -157,7 +157,7 @@ const Home: NextPage = () => {
               </div>
             )}
             {error && (
-              <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative">
+              <div className="flex justify-center items-center bg-red-500 text-white text-sm font-bold px-4 py-3 rounded relative animate-heartbeat">
                 <span className="text-xs">{error}</span>
               </div>
             )}
@@ -183,7 +183,7 @@ const Home: NextPage = () => {
             </form>
             {currentActivity ? (
               <>
-                <div className="flex items-center">
+                <div className="flex items-center animate-scaleVerCenter">
                   <img
                     className="h-12 w-12 rounded-full"
                     src={`https://cdn.discordapp.com/avatars/${id}/${doing?.discord_user?.avatar}?size=80`}
@@ -198,7 +198,7 @@ const Home: NextPage = () => {
                   </div>
                 </div>
 
-                <FadeIn className="space-y-2">
+                <FadeIn className="space-y-2 animate-scaleVerCenter">
                   <div className="flex items-center space-x-4 text-neutral-700 rounded-md dark:text-neutral-300">
                     {currentActivity?.name == "Fortnite" &&
                     currentActivity?.assets ? (
@@ -233,7 +233,7 @@ const Home: NextPage = () => {
                       ) : null}
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4 text-neutral-700 rounded-md dark:text-neutral-300">
+                  <div className="flex items-center space-x-4 text-neutral-700 rounded-md dark:text-neutral-300 animate-scaleHorCenter">
                     {doing?.spotify ? (
                       <>
                         <img
